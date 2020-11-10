@@ -17,10 +17,10 @@ import (
 
 	"github.com/vmware-tanzu/octant/internal/config"
 	"github.com/vmware-tanzu/octant/internal/gvk"
-	"github.com/vmware-tanzu/octant/internal/link"
 	"github.com/vmware-tanzu/octant/internal/objectstatus"
 	"github.com/vmware-tanzu/octant/internal/objectvisitor"
 	"github.com/vmware-tanzu/octant/internal/util/kubernetes"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/plugin"
 	"github.com/vmware-tanzu/octant/pkg/store"
 	"github.com/vmware-tanzu/octant/pkg/view/component"

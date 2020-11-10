@@ -8,7 +8,7 @@ package api
 import (
 	"context"
 	"fmt"
-
+	"github.com/vmware-tanzu/octant/internal/module"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	ocontext "github.com/vmware-tanzu/octant/internal/context"
@@ -79,6 +79,7 @@ type GRPCService struct {
 	PortForwarder          portforward.PortForwarder
 	FrontendProxy          FrontendProxy
 	NamespaceInterface     cluster.NamespaceInterface
+	ModuleManager          *module.Manager
 	WebsocketClientManager event.WSClientGetter
 }
 
@@ -88,6 +89,7 @@ var _ Service = (*GRPCService)(nil)
 func (s *GRPCService) List(ctx context.Context, key store.Key) (*unstructured.UnstructuredList, error) {
 	// TODO: support hasSynced
 	list, _, err := s.ObjectStore.List(ctx, key)
+	// generator, err := link.NewFromDashConfig(s.ModuleManager)
 	return list, err
 }
 

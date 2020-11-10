@@ -250,10 +250,11 @@ func (r *Runner) initAPI(ctx context.Context, logger log.Logger, options Options
 
 	r.moduleManager = moduleManager
 	pluginDashboardService := &pluginAPI.GRPCService{
-		ObjectStore:            appObjectStore,
-		PortForwarder:          portForwarder,
-		NamespaceInterface:     nsClient,
-		FrontendProxy:          frontendProxy,
+		ObjectStore:        appObjectStore,
+		PortForwarder:      portForwarder,
+		NamespaceInterface: nsClient,
+		FrontendProxy:      frontendProxy,
+		ModuleManager:      moduleManager,
 		WebsocketClientManager: r.websocketClientManager,
 	}
 

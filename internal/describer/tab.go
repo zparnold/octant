@@ -13,13 +13,13 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"github.com/vmware-tanzu/octant/internal/link"
 	"github.com/vmware-tanzu/octant/internal/log"
 	"github.com/vmware-tanzu/octant/internal/modules/overview/logviewer"
 	"github.com/vmware-tanzu/octant/internal/modules/overview/terminalviewer"
 	"github.com/vmware-tanzu/octant/internal/modules/overview/yamlviewer"
 	"github.com/vmware-tanzu/octant/internal/printer"
 	"github.com/vmware-tanzu/octant/internal/resourceviewer"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
 )
 

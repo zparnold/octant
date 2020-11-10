@@ -14,8 +14,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	configFake "github.com/vmware-tanzu/octant/internal/config/fake"
-	linkFake "github.com/vmware-tanzu/octant/internal/link/fake"
 	portForwardFake "github.com/vmware-tanzu/octant/internal/portforward/fake"
+	linkFake "github.com/vmware-tanzu/octant/pkg/link/fake"
 	pluginFake "github.com/vmware-tanzu/octant/pkg/plugin/fake"
 	objectStoreFake "github.com/vmware-tanzu/octant/pkg/store/fake"
 	"github.com/vmware-tanzu/octant/pkg/view/component"

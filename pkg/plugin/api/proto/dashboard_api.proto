@@ -76,3 +76,7 @@ service Dashboard {
     rpc ForceFrontendUpdate(Empty) returns(Empty);
     rpc SendAlert(AlertRequest) returns(Empty);
 }
+
+service LinkGenerator {
+    rpc ...
+}

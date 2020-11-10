@@ -8,9 +8,9 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/davecgh/go-spew/spew"
 	"github.com/pkg/errors"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -138,7 +138,7 @@ func (c *GRPCClient) Navigation(ctx context.Context) (navigation.Navigation, err
 }
 
 // Register register a plugin.
-func (c *GRPCClient) Register(ctx context.Context, dashboardAPIAddress string) (Metadata, error) {
+func (c *GRPCClient) Register(ctx context.Context, dashboardAPIAddress string, _ link.Interface) (Metadata, error) {
 	var m Metadata
 
 	err := c.run(func() error {
@@ -384,8 +384,8 @@ func (s *GRPCServer) Navigation(ctx context.Context, req *dashboard.NavigationRe
 }
 
 // Register register a plugin.
-func (s *GRPCServer) Register(ctx context.Context, registerRequest *dashboard.RegisterRequest) (*dashboard.RegisterResponse, error) {
-	m, err := s.Impl.Register(ctx, registerRequest.DashboardAPIAddress)
+func (s *GRPCServer) Register(ctx context.Context, registerRequest *dashboard.RegisterRequest, linkGenerator link.Interface) (*dashboard.RegisterResponse, error) {
+	m, err := s.Impl.Register(ctx, registerRequest.DashboardAPIAddress, linkGenerator)
 	if err != nil {
 		return nil, err
 	}

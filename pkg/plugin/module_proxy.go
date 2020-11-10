@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"

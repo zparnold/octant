@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/vmware-tanzu/octant/pkg/action"

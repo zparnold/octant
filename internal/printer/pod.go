@@ -19,8 +19,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 
-	"github.com/vmware-tanzu/octant/internal/link"
 	"github.com/vmware-tanzu/octant/internal/util/kubernetes"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/store"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
 )

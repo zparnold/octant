@@ -14,9 +14,9 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/util/jsonpath"
 
-	"github.com/vmware-tanzu/octant/internal/link"
 	"github.com/vmware-tanzu/octant/internal/octant"
 	octantStrings "github.com/vmware-tanzu/octant/internal/util/strings"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
 )
 

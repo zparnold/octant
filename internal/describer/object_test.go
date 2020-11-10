@@ -15,7 +15,7 @@ import (
 
 	"github.com/vmware-tanzu/octant/internal/describer"
 	describerFake "github.com/vmware-tanzu/octant/internal/describer/fake"
-	"github.com/vmware-tanzu/octant/internal/link"
+	"github.com/vmware-tanzu/octant/pkg/link"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"

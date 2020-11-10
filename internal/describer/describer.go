@@ -16,10 +16,10 @@ import (
 
 	"github.com/vmware-tanzu/octant/internal/config"
 	oerrors "github.com/vmware-tanzu/octant/internal/errors"
-	"github.com/vmware-tanzu/octant/internal/link"
 	"github.com/vmware-tanzu/octant/internal/log"
 	"github.com/vmware-tanzu/octant/internal/printer"
 	"github.com/vmware-tanzu/octant/internal/queryer"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/store"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
 )

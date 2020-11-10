@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"io/ioutil"
 	"path"
 	"sync"
@@ -72,7 +73,7 @@ type JSPlugin interface {
 	Metadata() *Metadata
 
 	Navigation(ctx context.Context) (navigation.Navigation, error)
-	Register(ctx context.Context, dashboardAPIAddress string) (Metadata, error)
+	Register(ctx context.Context, dashboardAPIAddress string, linkGenerator link.Interface) (Metadata, error)
 	Print(ctx context.Context, object runtime.Object) (PrintResponse, error)
 	PrintTab(ctx context.Context, object runtime.Object) (TabResponse, error)
 	ObjectStatus(ctx context.Context, object runtime.Object) (ObjectStatusResponse, error)
@@ -356,7 +357,7 @@ func (t *jsPlugin) Metadata() *Metadata {
 }
 
 // Register is not implemented for JavaScript plugins.
-func (t *jsPlugin) Register(_ context.Context, _ string) (Metadata, error) {
+func (t *jsPlugin) Register(_ context.Context, _ string, _ link.Interface) (Metadata, error) {
 	return Metadata{}, fmt.Errorf("not implemented")
 }
 

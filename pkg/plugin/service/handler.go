@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"sync"
 
 	ocontext "github.com/vmware-tanzu/octant/internal/context"
@@ -27,6 +28,7 @@ type Handler struct {
 
 	dashboardFactory func(dashboardAPIAddress string) (Dashboard, error)
 	dashboardClient  Dashboard
+	linkGenerator    link.Interface
 	router           *Router
 }
 
@@ -42,7 +44,7 @@ func (p *Handler) Validate() error {
 }
 
 // Register registers a plugin with Octant.
-func (p *Handler) Register(ctx context.Context, dashboardAPIAddress string) (plugin.Metadata, error) {
+func (p *Handler) Register(ctx context.Context, dashboardAPIAddress string, linkGenerator link.Interface) (plugin.Metadata, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -52,6 +54,7 @@ func (p *Handler) Register(ctx context.Context, dashboardAPIAddress string) (plu
 	}
 
 	p.dashboardClient = client
+	p.linkGenerator = linkGenerator
 
 	return plugin.Metadata{
 		Name:         p.name,
@@ -71,6 +74,7 @@ func (p *Handler) Print(ctx context.Context, object runtime.Object) (plugin.Prin
 	request := &PrintRequest{
 		baseRequest:     newBaseRequest(ctx, p.name),
 		DashboardClient: p.dashboardClient,
+		LinkGenerator: p.linkGenerator,
 		Object:          object,
 		ClientID:        clientID,
 	}

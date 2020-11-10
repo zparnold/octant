@@ -121,6 +121,13 @@ func handlePrint(request *service.PrintRequest) (plugin.PrintResponse, error) {
 
 	msg := fmt.Sprintf("update from plugin at %s", time.Now().Format(time.RFC3339))
 
+	request.DashboardClient.LinkFromRef("")
+
+	l, err := request.LinkGenerator.ForObject(request.Object, "")
+	if err != nil {
+		return plugin.PrintResponse{}, err
+	}
+
 	// When printing an object, you can create multiple types of content. In this
 	// example, the plugin is:
 	//
@@ -130,7 +137,7 @@ func handlePrint(request *service.PrintRequest) (plugin.PrintResponse, error) {
 	//   summary section for the component.
 	return plugin.PrintResponse{
 		Config: []component.SummarySection{
-			{Header: "from-plugin", Content: component.NewText(msg)},
+			{Header: "from-plugin", Content: l},
 		},
 		Status: []component.SummarySection{
 			{Header: "from-plugin", Content: component.NewText(msg)},

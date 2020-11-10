@@ -7,10 +7,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
-	linkFake "github.com/vmware-tanzu/octant/internal/link/fake"
 	"github.com/vmware-tanzu/octant/internal/objectstatus"
 	"github.com/vmware-tanzu/octant/internal/resourceviewer/fake"
 	"github.com/vmware-tanzu/octant/internal/testutil"
+	linkFake "github.com/vmware-tanzu/octant/pkg/link/fake"
 	pluginFake "github.com/vmware-tanzu/octant/pkg/plugin/fake"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
 )

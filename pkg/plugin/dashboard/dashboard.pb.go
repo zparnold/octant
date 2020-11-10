@@ -8,6 +8,7 @@ package dashboard
 
 import (
 	context "context"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	reflect "reflect"
 	sync "sync"
 
@@ -1656,7 +1657,7 @@ type PluginServer interface {
 	Content(context.Context, *ContentRequest) (*ContentResponse, error)
 	HandleAction(context.Context, *HandleActionRequest) (*HandleActionResponse, error)
 	Navigation(context.Context, *NavigationRequest) (*NavigationResponse, error)
-	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Register(context.Context, *RegisterRequest, link.Interface) (*RegisterResponse, error)
 	Print(context.Context, *ObjectRequest) (*PrintResponse, error)
 	ObjectStatus(context.Context, *ObjectRequest) (*ObjectStatusResponse, error)
 	PrintTab(context.Context, *ObjectRequest) (*PrintTabResponse, error)

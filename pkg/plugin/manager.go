@@ -12,6 +12,7 @@ package plugin
 import (
 	"context"
 	"fmt"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"os/exec"
 	"path/filepath"
 	"sort"
@@ -275,9 +276,10 @@ type Manager struct {
 
 	Runners Runners
 
-	octantClient javascript.OctantClient
-	configs      []config
-	store        ManagerStore
+	octantClient  javascript.OctantClient
+	configs       []config
+	store         ManagerStore
+	moduleManager *module.Manager
 
 	lock sync.Mutex
 }
@@ -301,6 +303,10 @@ func NewManager(apiService api.API, moduleRegistrar ModuleRegistrar, actionRegis
 	}
 
 	return m
+}
+
+func (m *Manager) NewLinkGenerator() (*link.Link, error) {
+	return link.NewFromDashConfig(m.octantClient)
 }
 
 func (m *Manager) SetOctantClient(client javascript.OctantClient) {
@@ -620,7 +626,11 @@ func (m *Manager) start(ctx context.Context, c config) error {
 		return errors.Errorf("unknown type for plugin %q: %T", c.name, raw)
 	}
 
-	metadata, err := service.Register(ctx, m.API.Addr())
+	linkGenerator, err := m.NewLinkGenerator()
+	if err != nil {
+		return fmt.Errorf("create link generator: %w", err)
+	}
+	metadata, err := service.Register(ctx, m.API.Addr(), linkGenerator)
 	if err != nil {
 		return errors.Wrapf(err, "register plugin %q", c.name)
 	}

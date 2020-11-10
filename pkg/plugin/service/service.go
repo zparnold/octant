@@ -7,6 +7,7 @@ package service
 
 import (
 	"context"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"path"
 	"strings"
 
@@ -153,6 +154,7 @@ func (r *baseRequest) GeneratePath(pathParts ...string) string {
 type PrintRequest struct {
 	baseRequest
 
+	LinkGenerator   link.Interface
 	DashboardClient Dashboard
 	Object          runtime.Object
 	ClientID        string
@@ -182,6 +184,8 @@ type HandlerObjectStatusFunc func(request *PrintRequest) (plugin.ObjectStatusRes
 type HandlerActionFunc func(request *ActionRequest) error
 type HandlerNavigationFunc func(request *NavigationRequest) (navigation.Navigation, error)
 type HandlerInitRoutesFunc func(router *Router)
+
+type LinkGeneratorFunc func() (*link.Link, error)
 
 // HandlerFuncs are functions for configuring a plugin.
 type HandlerFuncs struct {

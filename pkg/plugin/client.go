@@ -7,7 +7,7 @@ package plugin
 
 import (
 	"context"
-
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
@@ -92,7 +92,7 @@ type Metadata struct {
 // Service is the interface that is exposed as a plugin. The plugin is required to implement this
 // interface.
 type Service interface {
-	Register(ctx context.Context, dashboardAPIAddress string) (Metadata, error)
+	Register(ctx context.Context, dashboardAPIAddress string, link link.Interface) (Metadata, error)
 	Print(ctx context.Context, object runtime.Object) (PrintResponse, error)
 	PrintTab(ctx context.Context, object runtime.Object) (TabResponse, error)
 	ObjectStatus(ctx context.Context, object runtime.Object) (ObjectStatusResponse, error)

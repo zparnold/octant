@@ -16,8 +16,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	configFake "github.com/vmware-tanzu/octant/internal/config/fake"
-	linkFake "github.com/vmware-tanzu/octant/internal/link/fake"
 	"github.com/vmware-tanzu/octant/internal/testutil"
+	linkFake "github.com/vmware-tanzu/octant/pkg/link/fake"
 	"github.com/vmware-tanzu/octant/pkg/store"
 	storeFake "github.com/vmware-tanzu/octant/pkg/store/fake"
 	"github.com/vmware-tanzu/octant/pkg/view/component"
