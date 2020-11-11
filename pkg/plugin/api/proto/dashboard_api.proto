@@ -77,6 +77,36 @@ service Dashboard {
     rpc SendAlert(AlertRequest) returns(Empty);
 }
 
+message ObjectRequest {
+    bytes object = 1;
+    string text = 2;
+}
+
+message ObjectWithQueryRequest {
+    bytes object = 1;
+    string text = 2;
+    bytes query = 3;
+}
+
+message GVKRequest {
+    string namespace = 1;
+    string apiVersion = 2;
+    string kind = 3;
+    string text = 4;
+}
+
+message OwnerRequest {
+    bytes parent = 1;
+    bytes controllerRef = 2;
+}
+
+message ComponentResponse {
+    bytes linkComponent = 1;
+}
+
 service LinkGenerator {
-    rpc ...
+    rpc ForObject(ObjectRequest) returns (ComponentResponse);
+    rpc ForObjectWithQuery(ObjectWithQueryRequest) returns (ComponentResponse);
+    rpc ForGVK(GVKRequest) returns (ComponentResponse);
+    rpc ForOwner(OwnerRequest) returns (ComponentResponse);
 }

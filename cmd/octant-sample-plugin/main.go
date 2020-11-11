@@ -121,8 +121,6 @@ func handlePrint(request *service.PrintRequest) (plugin.PrintResponse, error) {
 
 	msg := fmt.Sprintf("update from plugin at %s", time.Now().Format(time.RFC3339))
 
-	request.DashboardClient.LinkFromRef("")
-
 	l, err := request.LinkGenerator.ForObject(request.Object, "")
 	if err != nil {
 		return plugin.PrintResponse{}, err

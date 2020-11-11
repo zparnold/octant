@@ -7,6 +7,11 @@ package api
 
 import (
 	"context"
+	"github.com/vmware-tanzu/octant/pkg/link"
+	"github.com/vmware-tanzu/octant/pkg/view/component"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"net/url"
 
 	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -50,6 +55,8 @@ type Client struct {
 }
 
 var _ Service = (*Client)(nil)
+
+var _ link.Interface = (*Client)(nil)
 
 // NewClient creates an instance of the API client. It requires the
 // address of the API.
@@ -235,4 +242,20 @@ func (c *Client) SendAlert(ctx context.Context, clientID string, alert action.Al
 
 	_, err = client.SendAlert(ctx, alertRequest)
 	return err
+}
+
+func (c *Client) ForObject(object runtime.Object, text string) (*component.Link, error) {
+	return component.NewLink("", "", ""), nil
+}
+
+func (c *Client) ForObjectWithQuery(object runtime.Object, text string, query url.Values) (*component.Link, error) {
+	return component.NewLink("", "", ""), nil
+}
+
+func (c *Client) ForGVK(namespace, apiVersion, kind, name, text string) (*component.Link, error) {
+	return component.NewLink("", "", ""), nil
+}
+
+func (c *Client) ForOwner(parent runtime.Object, controllerRef *metav1.OwnerReference) (*component.Link, error) {
+	return component.NewLink("", "", ""), nil
 }

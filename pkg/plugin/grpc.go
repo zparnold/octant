@@ -138,12 +138,18 @@ func (c *GRPCClient) Navigation(ctx context.Context) (navigation.Navigation, err
 }
 
 // Register register a plugin.
-func (c *GRPCClient) Register(ctx context.Context, dashboardAPIAddress string, _ link.Interface) (Metadata, error) {
+func (c *GRPCClient) Register(ctx context.Context, dashboardAPIAddress string, linkGenerator link.Interface) (Metadata, error) {
 	var m Metadata
 
 	err := c.run(func() error {
+		l, err := json.Marshal(&linkGenerator)
+		if err != nil {
+			return err
+		}
+
 		registerRequest := &dashboard.RegisterRequest{
 			DashboardAPIAddress: dashboardAPIAddress,
+			LinkGenerator:       l,
 		}
 
 		resp, err := c.client.Register(ctx, registerRequest, grpc.WaitForReady(true))
@@ -383,8 +389,23 @@ func (s *GRPCServer) Navigation(ctx context.Context, req *dashboard.NavigationRe
 
 }
 
+func decodeRegisterLinkGenerator(req *dashboard.RegisterRequest) (link.Interface, error) {
+	l := &link.Link{}
+
+	err := json.Unmarshal(req.LinkGenerator, &l)
+	if err != nil {
+		return nil, err
+	}
+	return l, nil
+}
+
 // Register register a plugin.
-func (s *GRPCServer) Register(ctx context.Context, registerRequest *dashboard.RegisterRequest, linkGenerator link.Interface) (*dashboard.RegisterResponse, error) {
+func (s *GRPCServer) Register(ctx context.Context, registerRequest *dashboard.RegisterRequest) (*dashboard.RegisterResponse, error) {
+	linkGenerator, err := decodeRegisterLinkGenerator(registerRequest)
+	if err != nil {
+		return nil, err
+	}
+
 	m, err := s.Impl.Register(ctx, registerRequest.DashboardAPIAddress, linkGenerator)
 	if err != nil {
 		return nil, err

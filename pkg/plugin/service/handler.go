@@ -74,7 +74,7 @@ func (p *Handler) Print(ctx context.Context, object runtime.Object) (plugin.Prin
 	request := &PrintRequest{
 		baseRequest:     newBaseRequest(ctx, p.name),
 		DashboardClient: p.dashboardClient,
-		LinkGenerator: p.linkGenerator,
+		LinkGenerator:   p.linkGenerator,
 		Object:          object,
 		ClientID:        clientID,
 	}
@@ -91,6 +91,7 @@ func (p *Handler) PrintTab(ctx context.Context, object runtime.Object) (plugin.T
 	request := &PrintRequest{
 		baseRequest:     newBaseRequest(ctx, p.name),
 		DashboardClient: p.dashboardClient,
+		LinkGenerator:   p.linkGenerator,
 		Object:          object,
 		ClientID:        ocontext.WebsocketClientIDFrom(ctx),
 	}
@@ -107,6 +108,7 @@ func (p *Handler) ObjectStatus(ctx context.Context, object runtime.Object) (plug
 	request := &PrintRequest{
 		baseRequest:     newBaseRequest(ctx, p.name),
 		DashboardClient: p.dashboardClient,
+		LinkGenerator:   p.linkGenerator,
 		Object:          object,
 		ClientID:        ocontext.WebsocketClientIDFrom(ctx),
 	}

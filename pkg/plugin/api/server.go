@@ -8,11 +8,10 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/vmware-tanzu/octant/internal/module"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	ocontext "github.com/vmware-tanzu/octant/internal/context"
+	"github.com/vmware-tanzu/octant/internal/module"
 	"github.com/vmware-tanzu/octant/pkg/event"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/vmware-tanzu/octant/internal/cluster"
 	"github.com/vmware-tanzu/octant/internal/gvk"
