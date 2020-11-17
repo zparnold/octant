@@ -7,6 +7,8 @@ package api
 
 import (
 	"context"
+	"github.com/vmware-tanzu/octant/internal/module"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"net"
 
 	"github.com/spf13/viper"
@@ -28,8 +30,9 @@ type API interface {
 
 // grpcAPI is in implementation of API backed by GRPC.
 type grpcAPI struct {
-	Service  Service
-	listener net.Listener
+	Service   Service
+	Generator link.Interface
+	listener  net.Listener
 }
 
 const dashServiceAddress = "127.0.0.1:0"
@@ -37,15 +40,21 @@ const dashServiceAddress = "127.0.0.1:0"
 var _ API = (*grpcAPI)(nil)
 
 // New creates a new API instance for DashService.
-func New(service Service) (API, error) {
+func New(service Service, moduleManager module.ManagerInterface) (API, error) {
 	listener, err := net.Listen("tcp", dashServiceAddress)
 	if err != nil {
 		return nil, errors.Wrap(err, "create listener")
 	}
 
+	generator, err := link.NewFromDashConfig(moduleManager)
+	if err != nil {
+		return nil, errors.Wrap(err, "create link generator")
+	}
+
 	return &grpcAPI{
-		Service:  service,
-		listener: listener,
+		Service:   service,
+		Generator: generator,
+		listener:  listener,
 	}, nil
 }
 
@@ -57,11 +66,16 @@ func (a *grpcAPI) Start(ctx context.Context) error {
 		service: a.Service,
 	}
 
+	generatorServer := &grpcLinkGenerator{
+		generator: a.Generator,
+	}
+
 	s := grpc.NewServer(
 		grpc.MaxRecvMsgSize(viper.GetInt("client-max-recv-msg-size")),
 	)
 
 	proto.RegisterDashboardServer(s, dashboardServer)
+	proto.RegisterLinkGeneratorServer(s, generatorServer)
 
 	logger.Debugf("dashboard plugin api is starting")
 	go func() {

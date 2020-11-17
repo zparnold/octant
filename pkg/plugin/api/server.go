@@ -7,18 +7,18 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	ocontext "github.com/vmware-tanzu/octant/internal/context"
-	"github.com/vmware-tanzu/octant/internal/module"
-	"github.com/vmware-tanzu/octant/pkg/event"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	"github.com/vmware-tanzu/octant/internal/cluster"
+	ocontext "github.com/vmware-tanzu/octant/internal/context"
 	"github.com/vmware-tanzu/octant/internal/gvk"
 	"github.com/vmware-tanzu/octant/internal/portforward"
 	"github.com/vmware-tanzu/octant/pkg/action"
+	"github.com/vmware-tanzu/octant/pkg/event"
+	"github.com/vmware-tanzu/octant/pkg/link"
 	"github.com/vmware-tanzu/octant/pkg/plugin/api/proto"
 	"github.com/vmware-tanzu/octant/pkg/store"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 // PortForwardRequest describes a port forward request.
@@ -78,7 +78,6 @@ type GRPCService struct {
 	PortForwarder          portforward.PortForwarder
 	FrontendProxy          FrontendProxy
 	NamespaceInterface     cluster.NamespaceInterface
-	ModuleManager          *module.Manager
 	WebsocketClientManager event.WSClientGetter
 }
 
@@ -88,7 +87,6 @@ var _ Service = (*GRPCService)(nil)
 func (s *GRPCService) List(ctx context.Context, key store.Key) (*unstructured.UnstructuredList, error) {
 	// TODO: support hasSynced
 	list, _, err := s.ObjectStore.List(ctx, key)
-	// generator, err := link.NewFromDashConfig(s.ModuleManager)
 	return list, err
 }
 
@@ -337,4 +335,109 @@ func (c *grpcServer) SendAlert(ctx context.Context, in *proto.AlertRequest) (*pr
 
 	c.service.SendAlert(ctx, in.ClientID, alert)
 	return &proto.Empty{}, nil
+}
+
+func NewLinkGeneratorServer(generator link.Interface) *grpcLinkGenerator {
+	return &grpcLinkGenerator{
+		generator: generator,
+	}
+}
+
+type grpcLinkGenerator struct {
+	generator link.Interface
+}
+
+var _ proto.LinkGeneratorServer = (*grpcLinkGenerator)(nil)
+
+func (l *grpcLinkGenerator) ForObject(_ context.Context, in *proto.ObjectRequest) (*proto.ComponentResponse, error) {
+	object, err := convertToObject(in.Object)
+	if err != nil || object == nil {
+		return nil, err
+	}
+
+	if l.generator == nil {
+		return nil, err
+	}
+
+	link, err := l.generator.ForObject(object, in.Text)
+	if err != nil {
+		return nil, err
+	}
+
+	component, err := json.Marshal(link)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.ComponentResponse{
+		LinkComponent: component,
+	}, nil
+}
+
+func (l *grpcLinkGenerator) ForObjectWithQuery(_ context.Context, in *proto.ObjectWithQueryRequest) (*proto.ComponentResponse, error) {
+	object, err := convertToObject(in.Object)
+	if err != nil || object == nil {
+		return nil, err
+	}
+
+	query, err := convertToQuery(in.Query)
+	if err != nil {
+		return nil, err
+	}
+
+	link, err := l.generator.ForObjectWithQuery(object, in.Text, query)
+	if err != nil {
+		return nil, err
+	}
+
+	component, err := json.Marshal(link)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.ComponentResponse{
+		LinkComponent: component,
+	}, nil
+}
+
+func (l *grpcLinkGenerator) ForGVK(_ context.Context, in *proto.GVKRequest) (*proto.ComponentResponse, error) {
+	link, err := l.generator.ForGVK(in.Namespace, in.ApiVersion, in.Kind, in.Name, in.Text)
+	if err != nil {
+		return nil, err
+	}
+
+	component, err := json.Marshal(link)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.ComponentResponse{
+		LinkComponent: component,
+	}, nil
+}
+
+func (l *grpcLinkGenerator) ForOwner(_ context.Context, in *proto.OwnerRequest) (*proto.ComponentResponse, error) {
+	parent, err := convertToObject(in.Parent)
+	if err != nil || parent == nil {
+		return nil, err
+	}
+
+	ownerReference, err := convertToOwnerReference(in.ControllerRef)
+	if err != nil || ownerReference == nil {
+		return nil, err
+	}
+
+	link, err := l.generator.ForOwner(parent, ownerReference)
+	if err != nil {
+		return nil, err
+	}
+
+	component, err := json.Marshal(link)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.ComponentResponse{
+		LinkComponent: component,
+	}, nil
 }

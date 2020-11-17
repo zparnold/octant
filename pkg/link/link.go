@@ -42,6 +42,10 @@ func NewFromDashConfig(config Config) (*Link, error) {
 		return nil, errors.New("link config is nil")
 	}
 
+	if config.ObjectPath == nil {
+		return nil, errors.New("object path is nil")
+	}
+
 	return &Link{
 		objectPathFn: config.ObjectPath,
 	}, nil
@@ -50,6 +54,9 @@ func NewFromDashConfig(config Config) (*Link, error) {
 // ForObject returns a link component referencing an object
 // Returns an empty link if an error occurs.
 func (l *Link) ForObject(object runtime.Object, text string) (*component.Link, error) {
+	//if l == nil {
+	//	return nil, nil
+	//}
 	p, err := l.extractPathFromObject(object)
 	if err != nil {
 		return nil, err

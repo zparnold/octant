@@ -50,7 +50,7 @@ func (za *zapAdapter) Warn(msg string, args ...interface{}) {
 
 // Emit a message and key/value pairs at the ERROR level
 func (za *zapAdapter) Error(msg string, args ...interface{}) {
-	za.dashLogger.With(args).Errorf(msg)
+	za.dashLogger.With(args...).Errorf(msg)
 }
 
 // Indicate if TRACE logs would be emitted. This and the other Is* guards

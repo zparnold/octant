@@ -92,7 +92,8 @@ message GVKRequest {
     string namespace = 1;
     string apiVersion = 2;
     string kind = 3;
-    string text = 4;
+    string name = 4;
+    string text = 5;
 }
 
 message OwnerRequest {

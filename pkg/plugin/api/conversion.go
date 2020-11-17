@@ -7,13 +7,14 @@ package api
 
 import (
 	"encoding/json"
-
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/pkg/errors"
+	"github.com/vmware-tanzu/octant/pkg/view/component"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
+	"net/url"
 
 	"github.com/vmware-tanzu/octant/pkg/action"
 	"github.com/vmware-tanzu/octant/pkg/plugin/api/proto"
@@ -167,4 +168,39 @@ func convertToPortForwardRequest(in *proto.PortForwardRequest) (*PortForwardRequ
 		PodName:   in.PodName,
 		Port:      uint16(port),
 	}, nil
+}
+
+func convertToQuery(in []byte) (url.Values, error) {
+	if in == nil {
+		return nil, nil
+	}
+
+	query := url.Values{}
+	err := json.Unmarshal(in, &query)
+	if err != nil {
+		return nil, err
+	}
+	return query, nil
+}
+
+func convertToOwnerReference(in []byte) (*metav1.OwnerReference, error) {
+	if in == nil {
+		return nil, nil
+	}
+
+	ownerReference := metav1.OwnerReference{}
+	err := json.Unmarshal(in, &ownerReference)
+	if err != nil {
+		return nil, err
+	}
+	return &ownerReference, nil
+}
+
+func convertToLinkComponent(in []byte) (*component.Link, error) {
+	linkComponent := component.Link{}
+	err := json.Unmarshal(in, &linkComponent)
+	if err != nil {
+		return nil, err
+	}
+	return &linkComponent, nil
 }

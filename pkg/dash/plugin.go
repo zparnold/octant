@@ -7,7 +7,6 @@ package dash
 
 import (
 	"fmt"
-
 	"github.com/vmware-tanzu/octant/internal/module"
 	"github.com/vmware-tanzu/octant/pkg/action"
 	"github.com/vmware-tanzu/octant/pkg/event"
@@ -16,7 +15,7 @@ import (
 )
 
 func initPlugin(moduleManager module.ManagerInterface, actionManager *action.Manager, ws event.WSClientGetter, service api.Service) (*plugin.Manager, error) {
-	apiService, err := api.New(service)
+	apiService, err := api.New(service, moduleManager)
 	if err != nil {
 		return nil, fmt.Errorf("create dashboard api: %w", err)
 	}

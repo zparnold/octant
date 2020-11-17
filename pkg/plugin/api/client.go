@@ -31,6 +31,7 @@ import (
 type DashboardConnection interface {
 	Close() error
 	Client() proto.DashboardClient
+	Generator() proto.LinkGeneratorClient
 }
 
 type defaultDashboardConnection struct {
@@ -45,6 +46,10 @@ func (d *defaultDashboardConnection) Close() error {
 
 func (d *defaultDashboardConnection) Client() proto.DashboardClient {
 	return proto.NewDashboardClient(d.conn)
+}
+
+func (d *defaultDashboardConnection) Generator() proto.LinkGeneratorClient {
+	return proto.NewLinkGeneratorClient(d.conn)
 }
 
 type ClientOption func(c *Client)
@@ -245,7 +250,27 @@ func (c *Client) SendAlert(ctx context.Context, clientID string, alert action.Al
 }
 
 func (c *Client) ForObject(object runtime.Object, text string) (*component.Link, error) {
-	return component.NewLink("", "", ""), nil
+	//generator := c.DashboardConnection.Generator()
+	//
+	//data, err := json.Marshal(object)
+	//if err != nil {
+	//	return nil, nil
+	//}
+	//
+	//objectRequest := &proto.ObjectRequest{
+	//	Object: data,
+	//	Text: text,
+	//}
+	//linkResponse, err := generator.ForObject(context.TODO(), objectRequest)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//link, err := convertToLinkComponent(linkResponse.LinkComponent)
+	//if err != nil {
+	//	return nil, err
+	//}
+	return component.NewLink("test", "test", "/test"), nil
 }
 
 func (c *Client) ForObjectWithQuery(object runtime.Object, text string, query url.Values) (*component.Link, error) {

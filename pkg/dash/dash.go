@@ -254,8 +254,13 @@ func (r *Runner) initAPI(ctx context.Context, logger log.Logger, options Options
 		PortForwarder:      portForwarder,
 		NamespaceInterface: nsClient,
 		FrontendProxy:      frontendProxy,
-		ModuleManager:      moduleManager,
 		WebsocketClientManager: r.websocketClientManager,
+	}
+
+	buildInfo := config.BuildInfo{
+		Version: options.BuildInfo.Version,
+		Commit:  options.BuildInfo.Commit,
+		Time:    options.BuildInfo.Time,
 	}
 
 	pluginManager, err := initPlugin(moduleManager, r.actionManager, r.websocketClientManager, pluginDashboardService)
@@ -264,12 +269,6 @@ func (r *Runner) initAPI(ctx context.Context, logger log.Logger, options Options
 	}
 
 	r.pluginManager = pluginManager
-
-	buildInfo := config.BuildInfo{
-		Version: options.BuildInfo.Version,
-		Commit:  options.BuildInfo.Commit,
-		Time:    options.BuildInfo.Time,
-	}
 
 	dashConfig := config.NewLiveConfig(
 		clusterClient,

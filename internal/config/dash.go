@@ -7,6 +7,7 @@ package config
 
 import (
 	"context"
+	"github.com/vmware-tanzu/octant/pkg/plugin"
 
 	"github.com/vmware-tanzu/octant/internal/octant"
 	"github.com/vmware-tanzu/octant/pkg/store"
@@ -20,7 +21,6 @@ import (
 	"github.com/vmware-tanzu/octant/internal/module"
 	"github.com/vmware-tanzu/octant/internal/portforward"
 	"github.com/vmware-tanzu/octant/pkg/log"
-	"github.com/vmware-tanzu/octant/pkg/plugin"
 )
 
 //go:generate mockgen -destination=./fake/mock_dash.go -package=fake github.com/vmware-tanzu/octant/internal/config Dash
